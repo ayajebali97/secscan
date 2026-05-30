@@ -1,23 +1,11 @@
-# Caddyfile for SecScan backend (production)
-# Place behind your domain, e.g. api.secscan.example.com
-#
-# Run with:
-#   docker run -d --name caddy --net host -v $PWD/Caddyfile:/etc/caddy/Caddyfile \
-#       -v caddy_data:/data -v caddy_config:/config caddy:2-alpine
-
 # Caddyfile for SecScan backend (diagnostics)
-# This is a minimal configuration to debug TLS issues.
+# Minimal HTTPS proxy using Caddy's internal CA for IP testing.
 
 {
-    # Disable all external certificate authorities
-    acme_ca off
-    acme_dns off
+    # No global options needed for internal TLS.
 }
 
 :443 {
-    # Use Caddy's internal, self-signed certificate issuer
     tls internal
-
-    # Reverse proxy all requests to the backend service
     reverse_proxy backend:8000
 }
