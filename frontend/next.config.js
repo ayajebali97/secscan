@@ -14,7 +14,7 @@ const cspDirectives = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  `connect-src 'self' ${apiOrigin}${isDev ? " ws://localhost:3000" : ""}`,
+  `connect-src 'self'${isDev ? " ws://localhost:3000" : ""}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -47,6 +47,14 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   experimental: {},
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${apiOrigin}/api/:path*`,
+      },
+    ];
+  },
   async headers() {
     return [
       {

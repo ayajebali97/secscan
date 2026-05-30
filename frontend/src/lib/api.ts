@@ -2,11 +2,10 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 
 import { useAuthStore } from "@/stores/auth";
 
-// Force a new build on Vercel to clear cache
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = "/api/v1";
 
 export const api = axios.create({
-  baseURL: `${API_URL}/api/v1`,
+  baseURL: API_BASE,
   timeout: 30000,
   headers: { "Content-Type": "application/json" },
 });
@@ -25,7 +24,7 @@ async function refreshAccessToken(): Promise<string | null> {
   const store = useAuthStore.getState();
   if (!store.refreshToken) return null;
   try {
-    const { data } = await axios.post(`${API_URL}/api/v1/auth/refresh`, {
+    const { data } = await axios.post(`${API_BASE}/auth/refresh`, {
       refresh_token: store.refreshToken,
     });
     store.setTokens(data.access_token, data.refresh_token);
