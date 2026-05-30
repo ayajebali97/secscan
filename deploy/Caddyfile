@@ -1,15 +1,15 @@
 # Caddyfile for SecScan backend
-# HTTP for Vercel server-side rewrites; HTTPS for direct browser/API access.
+# Listen on all interfaces so EC2 public IP changes do not require edits here.
 
 {
     # No global options needed for internal TLS.
 }
 
-http://34.227.79.220 {
+:80 {
     reverse_proxy backend:8000
 }
 
-https://34.227.79.220 {
+:443 {
     tls internal
     reverse_proxy backend:8000
 }
