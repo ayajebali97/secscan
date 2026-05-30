@@ -5,47 +5,19 @@
 #   docker run -d --name caddy --net host -v $PWD/Caddyfile:/etc/caddy/Caddyfile \
 #       -v caddy_data:/data -v caddy_config:/config caddy:2-alpine
 
-# Caddyfile for SecScan backend (development/IP-only)
-# This configuration uses a self-signed certificate for testing purposes.
-# Your browser will show a security warning which you will need to bypass.
+# Caddyfile for SecScan backend (diagnostics)
+# This is a minimal configuration to debug TLS issues.
 
 {
-    # This block is intentionally left empty for this configuration.
-    # We are not using a real email or on-demand TLS for an IP address.
+    # Disable all external certificate authorities
+    acme_ca off
+    acme_dns off
 }
 
-https://34.227.79.220 {
-    tls internal # Use Caddy's internal, self-signed certificate issuer
+:443 {
+    # Use Caddy's internal, self-signed certificate issuer
+    tls internal
 
-    encode zstd gzip
-
-    @body_limit {
-        not method GET HEAD OPTIONS
-    }
-    request_body @body_limit {
-        max_size 2MB
-    }
-
-    header {
-        # Security headers are still good practice
-        Strict-Transport-Security "max-age=31536000"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Referrer-Policy "strict-origin-when-cross-origin"
-        -Server
-    }
-
-    reverse_proxy backend:8000 {
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-Proto {scheme}
-        transport http {
-            read_timeout 120s
-            write_timeout 120s
-        }
-    }
-
-    log {
-        output stdout
-        format console
-    }
+    # Reverse proxy all requests to the backend service
+    reverse_proxy backend:8000
 }
