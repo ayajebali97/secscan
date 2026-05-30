@@ -79,6 +79,7 @@ services:
       - "8000"
     networks:
       - secscan-internal
+      - secscan-public
     deploy:
       resources:
         limits:
@@ -96,7 +97,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: ["celery", "-A", "app.tasks.celery_app", "worker", "-l", "info", "-Q", "celery", "-c", "2"]
+    command: ["celery", "-A", "app.tasks.celery_app:celery_app", "worker", "--loglevel=info", "--concurrency=2"]
     restart: unless-stopped
     environment:
       <<: *backend-env
@@ -110,29 +111,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    networks:
-      - secscan-internal
-    deploy:
-      resources:
-        limits:
-          cpus: "1.5"
-          memory: 1G
-    security_opt:
-      - no-new-privileges:true
-    read_only: true
-    tmpfs:
-      - /tmp:size=64M,mode=1777
-    cap_drop:
-      - ALL
-    restart: unless-stopped
-    command: ["celery", "-A", "app.tasks.celery_app:celery_app", "worker", "--loglevel=info", "--concurrency=2"]
-    environment:
-      <<: *backend-env
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     networks:
       - secscan-internal
       - secscan-public
