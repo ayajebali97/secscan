@@ -5,7 +5,7 @@
     # No global options needed for internal TLS.
 }
 
-:443 {
+https://34.227.79.220 {
     tls internal
     reverse_proxy backend:8000
 }
