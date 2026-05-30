@@ -1,5 +1,3 @@
-name: secscan
-
 x-backend-env: &backend-env
   ENVIRONMENT: ${ENVIRONMENT:-production}
   DEBUG: ${DEBUG:-false}
