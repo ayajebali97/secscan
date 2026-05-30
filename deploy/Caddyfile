@@ -1,0 +1,53 @@
+# Caddyfile for SecScan backend (production)
+# Place behind your domain, e.g. api.secscan.example.com
+#
+# Run with:
+#   docker run -d --name caddy --net host -v $PWD/Caddyfile:/etc/caddy/Caddyfile \
+#       -v caddy_data:/data -v caddy_config:/config caddy:2-alpine
+
+{
+    email security@example.com
+    servers {
+        protocols h1 h2 h3
+        strict_sni_host
+    }
+}
+
+api.secscan.example.com {
+    encode zstd gzip
+
+    @body_limit {
+        not method GET HEAD OPTIONS
+    }
+    request_body @body_limit {
+        max_size 2MB
+    }
+
+    header {
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Cross-Origin-Opener-Policy "same-origin"
+        Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+        -Server
+        -X-Powered-By
+    }
+
+    reverse_proxy localhost:8000 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+        transport http {
+            read_timeout 120s
+            write_timeout 120s
+        }
+    }
+
+    log {
+        output file /var/log/caddy/secscan.log {
+            roll_size 50MiB
+            roll_keep 10
+        }
+        format json
+    }
+}

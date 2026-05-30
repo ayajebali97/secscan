@@ -1,0 +1,26 @@
+name: secscan-dev
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    environment:
+      DEBUG: "true"
+      ENVIRONMENT: development
+    volumes:
+      - ./backend/app:/app/app:ro
+    read_only: false
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["celery", "-A", "app.tasks.celery_app:celery_app", "worker", "--loglevel=debug", "--concurrency=2"]
+    environment:
+      DEBUG: "true"
+      ENVIRONMENT: development
+    volumes:
+      - ./backend/app:/app/app:ro
+    read_only: false
