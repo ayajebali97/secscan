@@ -48,11 +48,9 @@ export default function LoginPage() {
       const form = new URLSearchParams();
       form.set("username", values.email);
       form.set("password", values.password);
-      const tokenRes = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/v1/auth/login`,
-        form,
-        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-      );
+      const tokenRes = await axios.post("/api/v1/auth/login", form, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      });
       setTokens(tokenRes.data.access_token, tokenRes.data.refresh_token);
       const meRes = await api.get("/users/me");
       setUser(meRes.data);

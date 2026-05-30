@@ -1,8 +1,12 @@
-# Caddyfile for SecScan backend (diagnostics)
-# Minimal HTTPS proxy using Caddy's internal CA for IP testing.
+# Caddyfile for SecScan backend
+# HTTP for Vercel server-side rewrites; HTTPS for direct browser/API access.
 
 {
     # No global options needed for internal TLS.
+}
+
+http://34.227.79.220 {
+    reverse_proxy backend:8000
 }
 
 https://34.227.79.220 {
