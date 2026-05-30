@@ -75,10 +75,9 @@ services:
       redis:
         condition: service_healthy
     ports:
-      - "${BACKEND_PORT:-8000}:8000"
+      - "8000"
     networks:
       - secscan-internal
-      - secscan-public
     deploy:
       resources:
         limits:
@@ -149,13 +148,33 @@ services:
     cap_drop:
       - ALL
 
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+    networks:
+      - secscan-internal
+      - secscan-public
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:
+  caddy_config:
+
 networks:
   secscan-internal:
     driver: bridge
     internal: true
   secscan-public:
     driver: bridge
-
-volumes:
-  postgres_data:
-  redis_data:

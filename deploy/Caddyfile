@@ -6,14 +6,13 @@
 #       -v caddy_data:/data -v caddy_config:/config caddy:2-alpine
 
 {
-    email security@example.com
-    servers {
-        protocols h1 h2 h3
-        strict_sni_host
+    # On-demand TLS for domains that don't have certificates yet
+    on_demand_tls {
+        ask http://localhost:8000/caddy-ask
     }
 }
 
-api.secscan.example.com {
+:443 {
     encode zstd gzip
 
     @body_limit {
@@ -34,7 +33,7 @@ api.secscan.example.com {
         -X-Powered-By
     }
 
-    reverse_proxy localhost:8000 {
+    reverse_proxy backend:8000 {
         header_up X-Real-IP {remote_host}
         header_up X-Forwarded-Proto {scheme}
         transport http {
@@ -44,10 +43,7 @@ api.secscan.example.com {
     }
 
     log {
-        output file /var/log/caddy/secscan.log {
-            roll_size 50MiB
-            roll_keep 10
-        }
-        format json
+        output stdout
+        format console
     }
 }
