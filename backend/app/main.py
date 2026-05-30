@@ -60,10 +60,7 @@ app.add_middleware(
 if settings.ENVIRONMENT != "development":
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=["*"] if settings.DEBUG else [
-            host.replace("https://", "").replace("http://", "").rstrip("/")
-            for host in settings.cors_origins_list
-        ] + ["localhost", "127.0.0.1"],
+        allowed_hosts=["*"] if settings.DEBUG else settings.trusted_hosts_list,
     )
 
 

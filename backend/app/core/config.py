@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: str = "http://localhost:3000"
 
+    # Host header allowlist (public IP/domain behind Caddy, comma-separated)
+    TRUSTED_HOSTS: str = ""
+
     # Database
     POSTGRES_USER: str = "secscan"
     POSTGRES_PASSWORD: str
@@ -62,6 +65,17 @@ class Settings(BaseSettings):
     @property
     def cors_origins_list(self) -> List[str]:
         return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
+
+    @property
+    def trusted_hosts_list(self) -> List[str]:
+        hosts: set[str] = {"localhost", "127.0.0.1", "backend"}
+        for origin in self.cors_origins_list:
+            hosts.add(origin.replace("https://", "").replace("http://", "").rstrip("/"))
+        for host in self.TRUSTED_HOSTS.split(","):
+            h = host.strip()
+            if h:
+                hosts.add(h.replace("https://", "").replace("http://", "").rstrip("/"))
+        return sorted(hosts)
 
     @property
     def database_url(self) -> str:
