@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Premium light gray/slate background */
+    --background: 220 14% 97%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    
+    /* Primary - refined blue */
+    --primary: 221.2 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    
+    /* Secondary - soft slate */
+    --secondary: 218 14% 88%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    
+    /* Muted - light gray for backgrounds */
+    --muted: 220 13% 91%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    
+    /* Accent - softer secondary color */
+    --accent: 216 20% 80%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    
+    /* Destructive - softer red */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    
+    /* Borders - subtle slate tones */
+    --border: 220 13% 90%;
+    --input: 220 13% 91%;
+    --ring: 221.2 83% 53%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 6%;
+    --card-foreground: 210 40% 98%;
+    --primary: 217.2 91% 60%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Premium Card Styling */
+  .card-premium {
+    @apply bg-card rounded-lg border border-border shadow-sm transition-all duration-200 hover:shadow-md hover:border-secondary/50;
+  }
+
+  .card-premium-elevated {
+    @apply bg-card rounded-lg border border-border shadow-md transition-all duration-200 hover:shadow-lg hover:border-secondary/60;
+  }
+
+  /* Better button styling */
+  .btn-primary-premium {
+    @apply bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:shadow-sm;
+  }
+
+  .btn-secondary-premium {
+    @apply bg-secondary text-secondary-foreground px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-secondary/80 hover:shadow-sm;
+  }
+
+  .btn-ghost-premium {
+    @apply text-foreground px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-muted/50;
+  }
+
+  /* Input styling with better focus states */
+  .input-premium {
+    @apply w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground placeholder-muted-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+  }
+
+  /* Badge styling */
+  .badge-premium {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition-all duration-200;
+  }
+
+  .badge-critical {
+    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+  }
+
+  .badge-high {
+    @apply bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200;
+  }
+
+  .badge-medium {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+  }
+
+  .badge-low {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200;
+  }
+
+  .badge-info {
+    @apply bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-100;
+  }
+
+  /* Section styling */
+  .section-header {
+    @apply flex items-center justify-between border-b border-border pb-4 mb-4;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-foreground tracking-tight;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-muted-foreground mt-1;
+  }
+
+  /* Grid improvements */
+  .grid-cards {
+    @apply grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .grid-cards-2 {
+    @apply grid gap-4 grid-cols-1 md:grid-cols-2;
+  }
+
+  /* Better spacing helpers */
+  .space-between {
+    @apply flex items-center justify-between;
+  }
+
+  .space-center {
+    @apply flex items-center justify-center;
+  }
+
+  /* Smooth transitions for interactive elements */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Status indicators */
+  .status-active {
+    @apply inline-flex items-center gap-2 text-green-700 dark:text-green-400;
+  }
+
+  .status-pending {
+    @apply inline-flex items-center gap-2 text-amber-700 dark:text-amber-400;
+  }
+
+  .status-error {
+    @apply inline-flex items-center gap-2 text-red-700 dark:text-red-400;
+  }
+}
